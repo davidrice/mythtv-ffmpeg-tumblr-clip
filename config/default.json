@@ -6,5 +6,8 @@
 		"recordings": {
 			"path":"/home/mythtv/recordings"
 		}
+	},
+	"clips": {
+		"path":"./clips"
 	}
 }
