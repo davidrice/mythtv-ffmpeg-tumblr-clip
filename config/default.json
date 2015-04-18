@@ -1,0 +1,10 @@
+{
+	"mythfrontend": {
+		"hostname":"nickel"
+	},
+	"mythbackend": {
+		"recordings": {
+			"path":"/home/mythtv/recordings"
+		}
+	}
+}
