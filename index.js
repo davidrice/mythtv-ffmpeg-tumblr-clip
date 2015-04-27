@@ -4,7 +4,7 @@ var config = require("config");
 var bodyParser = require("body-parser");
 var app = express();
 
-app.use(express.static(__dirname + "/clips"));
+app.use('/clips', express.static(__dirname + "/clips"));
 app.use(bodyParser.json());
 
 var mythtv = require("./mythFrontendClient").create(config.mythfrontend.hostname);
