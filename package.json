@@ -4,7 +4,7 @@
   "description": "web service for creating tumblr clips of whats on mythfrontend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "browserify": "grunt browserify:main"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,17 @@
     "xml2js": "~0.4.8",
     "body-parser": "~1.12.3",
     "uuid": "~2.0.1",
-    "redis": "~0.12.1"
+    "redis": "~0.12.1",
+    "react": "~0.13.2",
+    "express-react-views": "~0.7.2",
+    "superagent": "~1.2.0",
+    "when": "~3.7.3"
+  },
+  "devDependencies": {
+    "browserify": "~9.0.8",
+    "grunt-browserify": "~3.7.0",
+    "grunt-cli": "~0.1.13",
+    "grunt": "~0.4.5",
+    "reactify": "~1.1.0"
   }
 }

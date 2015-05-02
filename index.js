@@ -1,16 +1,22 @@
+var React = require('react');
 var path = require("path");
 var express = require("express");
 var config = require("config");
 var bodyParser = require("body-parser");
 var app = express();
+var routes = require('./routes');
+app.set('view engine', 'jsx');
+app.engine('jsx', require('express-react-views').createEngine({beautify:true}));
 
 app.use('/clips', express.static(__dirname + "/clips"));
+app.use('/static', express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
 var mythtv = require("./mythFrontendClient").create(config.mythfrontend.hostname);
 
 var transcodeJobManager = require("./transcodeJobManager");
 
+app.get('/', routes.index);
 app.post("/mythtv/clip", function(req, res) {
 	var duration = req.body.duration;
 	mythtv.getStatus(function(err, frontendStatus) {
