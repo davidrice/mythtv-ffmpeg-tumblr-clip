@@ -5,6 +5,8 @@ var config = require("config");
 var bodyParser = require("body-parser");
 var app = express();
 var routes = require('./routes');
+var redis = require("redis");
+var redisClient = redis.createClient();
 app.set('view engine', 'jsx');
 app.engine('jsx', require('express-react-views').createEngine({beautify:true}));
 
@@ -17,8 +19,21 @@ var mythtv = require("./mythFrontendClient").create(config.mythfrontend.hostname
 var transcodeJobManager = require("./transcodeJobManager");
 
 app.get('/', routes.index);
-app.post("/mythtv/clip", function(req, res) {
+app.get("/api/mythtv/clip/:id", function(req, res) {
+	var id = req.params.id;
+	redisClient.get(id, function(err,result) {
+		if(err==null && result){ 
+			res.send(result);
+		}
+		else {
+			res.status(404).end();
+		}
+	});
+});
+app.post("/api/mythtv/clip", function(req, res) {
 	var duration = req.body.duration;
+	console.log(req.body);
+	console.log(duration);
 	mythtv.getStatus(function(err, frontendStatus) {
 		if(err==null){
 			var offset = frontendStatus.playedtime;
@@ -52,7 +67,7 @@ app.post("/mythtv/clip", function(req, res) {
 	});
 });
 
-app.get("/mythtv/status", function(req, res) {
+app.get("/api/mythtv/status", function(req, res) {
 	mythtv.getStatus(function(err,frontendStatus) {
 		if(err==null) {
 			res.status(200).json(frontendStatus);

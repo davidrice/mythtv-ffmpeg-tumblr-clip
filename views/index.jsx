@@ -9,6 +9,7 @@ var Index = React.createClass({
 				<h1>MythTv Ffmpeg Tumblr Clip</h1>
 				<div id='mythtv-ffmpeg-tumblr-clip'>
 				</div>
+				<div id='clip'></div>
 			</DefaultLayout>
 		);
 	}
