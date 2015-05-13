@@ -2,6 +2,8 @@ var ffmpeg = require('fluent-ffmpeg');
 var path = require("path");
 var config = require("config");
 var uuid = require("uuid");
+var redis = require("redis");
+var redisClient = redis.createClient();
 
 var TranscodeJobManager = {
 	counter: 0,
@@ -13,13 +15,23 @@ var TranscodeJobManager = {
 		var fullPath = path.join(config.mythbackend.recordings.path, jobConfig.pathname);
 		var outputFilename = makeOutputFilename(jobConfig);
 		var outputPath = path.join(config.clips.path, outputFilename);
-		ffmpeg(fullPath).seekInput(jobConfig.offset).duration(jobConfig.duration).audioCodec("aac").videoCodec("libx264").videoBitrate(10000, true).on("end", function() {
+		ffmpeg(fullPath)
+			.seekInput(jobConfig.offset)
+			.duration(jobConfig.duration)
+			.audioCodec("aac")
+			.videoCodec("libx264")
+			.videoBitrate(10000, true)
+		.on("end", function() {
 			console.log('done with ' + outputPath);
+			jobConfig.complete = true;
+			jobConfig.uri = "/" + outputPath;
+			redisClient.set(jobConfig.id, JSON.stringify(jobConfig), redis.print);
 			self.running = false;
 			self.runJob();
 		}).on("error", function(err) {
 			console.log(err);	
-		}).save(outputPath);;
+		})
+		.save(outputPath);;
 	},
 	runJob: function() {
 		if(this.jobs.length>0 && !this.running) { 
