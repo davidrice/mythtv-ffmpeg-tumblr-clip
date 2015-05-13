@@ -21056,6 +21056,46 @@ module.exports = function(arr, fn, initial){
 var React = require('react');
 var request = require('superagent');
 
+var MythTvStatus = React.createClass({displayName: "MythTvStatus",
+	getInitialState: function() {
+		return {
+			title: '',
+			subtitle: ''
+		}
+	},
+	componentDidMount: function(e) {
+		request
+			.get('/api/mythtv/status')
+			.set('Accept', 'application/json')
+			.end(function(err, result) {
+				if(err==null) {
+					console.log(result);	
+					this.setState(result);
+				}
+				else {
+					console.log(err);
+				}
+			});
+	},
+
+	render: function() {
+		return (
+			React.createElement("div", {className: "mythtv-status"}, 
+				React.createElement("div", {className: "mythtv-title"}, 
+					React.createElement("h2", {className: "title"}, 
+					this.state.title
+					)
+				), 
+				React.createElement("div", {className: "mythtv-subtitle"}, 
+					React.createElement("h2", {className: "title"}, 
+					this.state.subtitle
+					)
+				)
+			)
+		);
+	}
+});
+
 var ClipMakerForm = React.createClass({displayName: "ClipMakerForm",
 	handleSubmit: function(e) {
 		e.preventDefault();
@@ -21087,7 +21127,8 @@ var ClipMakerForm = React.createClass({displayName: "ClipMakerForm",
 });
 
 React.render(
-	React.createElement(ClipMakerForm, null),
+
+	React.createElement(MythTvStatus, null),
 	document.getElementById("mythtv-ffmpeg-tumblr-clip")
 );
 
